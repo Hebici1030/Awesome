@@ -28,11 +28,12 @@ func (receiver PacketConsumer) Consume(flows chan gopacket.Packet) {
 		layer := packet.LinkLayer()
 		flow := layer.LinkFlow()
 		metaInfo := receiver.parent.GetFlow(flow)
-		meta, ok := metaInfo.(FlowMetaInfo)
+		meta, ok := metaInfo.(MetaFlow)
 		if !ok {
 			log.Fatal()
 			return
 		}
+		b_InData := (receiver.parent.ip == meta.src)
 		err := parser.DecodeLayers(packet.Data(), &layerData)
 		if err != nil {
 			log.Fatal(err, " 解析协议层失败，继续解析下一个数据包")
@@ -41,7 +42,11 @@ func (receiver PacketConsumer) Consume(flows chan gopacket.Packet) {
 		for _, ltype := range layerData {
 			switch ltype {
 			case layers.LayerTypeUDP:
-				meta.Detail()
+				if b_InData {
+					meta.Out_udp += 1
+				} else {
+					meta.In_Udp += 1
+				}
 			case layers.LayerTypeTCP:
 				meta.Detail()
 			}

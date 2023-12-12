@@ -12,6 +12,8 @@ import (
 const (
 	//正规表达式匹配网口
 	netgape string = "^\\w*:\\sflags=[0-9]*9"
+	ipv4           = "^((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)"
+	ipv6           = "^([\\da-fA-F]{1,4}:){7}[\\da-fA-F]{1,4}|:((:[\\da−fA−F]1,4)1,6|:)"
 )
 
 var SystemNet = []string{}
@@ -41,6 +43,7 @@ func DeviceFiner() error {
 			if index != -1 {
 				SystemNet = append(SystemNet, string(find[0:index]))
 			}
+			//TODO 源码
 		}
 	}
 	if len(SystemNet) == 0 {
