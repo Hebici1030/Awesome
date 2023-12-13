@@ -19,7 +19,7 @@ type PacketConsumer struct {
 
 func (receiver PacketConsumer) Consume() {
 	var ip4 layers.IPv4
-	var ip6 layers.IPv4
+	var ip6 layers.IPv6
 	var tcp layers.TCP
 	var udp layers.UDP
 	parser := gopacket.NewDecodingLayerParser(layers.LayerTypeEthernet, &ip4, &ip6, &tcp, &udp)
