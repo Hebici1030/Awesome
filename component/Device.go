@@ -60,9 +60,10 @@ func (n *NetFlow) newNetMonitor() {
 	}
 }
 
+var once sync.Once
+
 func (n *NetFlow) GetFlow(flow gopacket.Flow) model.FlowMetaInfo {
 	if n.Flows[flow] == nil {
-		var once sync.Once
 		once.Do(func() {
 			metaFlow := model.MetaFlow{
 				Src:       flow.Src().String(),
