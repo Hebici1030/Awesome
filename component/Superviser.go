@@ -40,6 +40,7 @@ func Start(iConsumer int) []Superviser {
 		return nil
 	}
 	print("find all device\n")
+	print(netFlows)
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
