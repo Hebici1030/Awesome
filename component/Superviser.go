@@ -34,11 +34,12 @@ type result struct {
 
 // iConsumer 初始消费者数量
 func Start(iConsumer int) []Superviser {
-	print("start")
+	print("start\n")
 	netFlows, err := MonitorFactory(65535, -1)
 	if err != nil {
 		return nil
 	}
+	print("find all device\n")
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
@@ -54,6 +55,7 @@ func Start(iConsumer int) []Superviser {
 			one_superviser.Consumers = []*PacketConsumer{}
 			one_superviser.Consumers = append(one_superviser.Consumers, consumer)
 			res = append(res, one_superviser)
+			print("go a Consumer\n")
 			go consumer.Consume()
 		}
 	}
