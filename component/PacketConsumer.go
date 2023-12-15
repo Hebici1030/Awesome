@@ -30,6 +30,7 @@ func (consumer *PacketConsumer) Consume() {
 		if !consumer.status {
 			return
 		}
+		print("waiting for packet")
 		packet := <-consumer.ch
 		//TODO
 		//layer := packet.NetworkLayer()
@@ -52,7 +53,7 @@ func (consumer *PacketConsumer) Consume() {
 			flow := ip6.NetworkFlow()
 			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
 		}
-		log.Print("get a flow")
+		log.Print("resolve a packet")
 		meta = metaInfo.(*model.MetaFlow)
 		for _, ltype := range layerData {
 			switch ltype {

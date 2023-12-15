@@ -53,10 +53,7 @@ func (n *NetFlow) startMonitor() error {
 	n.ch_packets = make(chan gopacket.Packet, 65535)
 	n.Flows = make(map[gopacket.Flow]model.FlowMetaInfo)
 	packetSource := gopacket.NewPacketSource(handle, gopacket.DecodeFragment)
-	print("stocked??")
 	for packet := range packetSource.Packets() {
-		print("stocking")
-
 		n.ch_packets <- packet
 		n.Summon++
 	}
