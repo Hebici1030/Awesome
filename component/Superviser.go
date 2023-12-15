@@ -34,23 +34,15 @@ type result struct {
 
 // iConsumer 初始消费者数量
 func Start(iConsumer int) []Superviser {
-	print("start\n")
 	netFlows, err := MonitorFactory(65535, -1)
 	if err != nil {
 		return nil
 	}
-	print("find all device\n")
-	print(netFlows)
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
 		go netFlows[i].startMonitor()
-		//err := .startMonitor()
-		//if err != nil {
-		//	print(err)
-		//}
 		provider := netFlows[i]
-		print("new a consumer\n")
 		for i := 0; i < iConsumer; i++ {
 			//添加消费者
 			consumer := &PacketConsumer{
@@ -62,15 +54,11 @@ func Start(iConsumer int) []Superviser {
 			one_superviser.Consumers = []*PacketConsumer{}
 			one_superviser.Consumers = append(one_superviser.Consumers, consumer)
 			//监督者组添加监督者
-			print("go a Consumer\n")
 			go consumer.Consume()
 		}
 		res = append(res, one_superviser)
 	}
 	return res
-}
-func async_start(n *NetFlow) {
-
 }
 
 // 增加消费者

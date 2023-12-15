@@ -52,6 +52,7 @@ func (consumer *PacketConsumer) Consume() {
 			flow := ip6.NetworkFlow()
 			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
 		}
+		log.Print("get a flow")
 		meta = metaInfo.(*model.MetaFlow)
 		for _, ltype := range layerData {
 			switch ltype {

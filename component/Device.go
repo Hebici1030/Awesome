@@ -43,18 +43,16 @@ func MonitorFactory(snapLen int32, sampleTime time.Duration) ([]*NetFlow, error)
 
 // todo 一个网络层链接的通道缓存多少合适
 func (n *NetFlow) startMonitor() error {
-	print("startMonitor")
 	//监听网口
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
 	defer handle.Close()
 	if err != nil {
-		fmt.Sprintf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String())
+		print(fmt.Sprintf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String()))
 	}
 	//DecodeFragment Fragment contains all
 	n.ch_packets = make(chan gopacket.Packet, 65535)
 	n.Flows = make(map[gopacket.Flow]model.FlowMetaInfo)
 	packetSource := gopacket.NewPacketSource(handle, gopacket.DecodeFragment)
-	//packetSource.DecodeOptions.NoCopy = true;
 	print("stocked??")
 	for packet := range packetSource.Packets() {
 		print("stocking")
