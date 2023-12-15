@@ -43,9 +43,13 @@ func Start(iConsumer int) []Superviser {
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
-		netFlows[i].startMonitor()
+		err := netFlows[i].startMonitor()
+		if err != nil {
+			print(err)
+		}
 		provider := netFlows[i]
 		for i := 0; i < iConsumer; i++ {
+			//添加消费者
 			consumer := &PacketConsumer{
 				status: true,
 				net:    provider,
@@ -54,10 +58,11 @@ func Start(iConsumer int) []Superviser {
 			one_superviser.Provider = provider
 			one_superviser.Consumers = []*PacketConsumer{}
 			one_superviser.Consumers = append(one_superviser.Consumers, consumer)
-			res = append(res, one_superviser)
+			//监督者组添加监督者
 			print("go a Consumer\n")
 			go consumer.Consume()
 		}
+		res = append(res, one_superviser)
 	}
 	return res
 }

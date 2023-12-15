@@ -2,6 +2,7 @@ package component
 
 import (
 	"Awesome/component/model"
+	"fmt"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
 	"log"
@@ -41,13 +42,12 @@ func MonitorFactory(snapLen int32, sampleTime time.Duration) ([]*NetFlow, error)
 }
 
 // todo 一个网络层链接的通道缓存多少合适
-func (n *NetFlow) startMonitor() {
+func (n *NetFlow) startMonitor() error {
 	//监听网口
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
 	defer handle.Close()
 	if err != nil {
-		log.Fatal("fail in OpenLive")
-		return
+		return fmt.Errorf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String())
 	}
 	//DecodeFragment Fragment contains all
 	n.ch_packets = make(chan gopacket.Packet, 65535)
@@ -58,6 +58,7 @@ func (n *NetFlow) startMonitor() {
 		n.ch_packets <- packet
 		n.Summon++
 	}
+	return nil
 }
 
 var once sync.Once
