@@ -48,7 +48,7 @@ func (n *NetFlow) startMonitor() error {
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
 	defer handle.Close()
 	if err != nil {
-		return fmt.Errorf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String())
+		fmt.Sprintf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String())
 	}
 	//DecodeFragment Fragment contains all
 	n.ch_packets = make(chan gopacket.Packet, 65535)
