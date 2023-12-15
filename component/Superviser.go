@@ -41,7 +41,7 @@ func Start(iConsumer int) []Superviser {
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
-		go netFlows[i].startMonitor()
+		netFlows[i].startMonitor()
 		provider := netFlows[i]
 		for i := 0; i < iConsumer; i++ {
 			//添加消费者
