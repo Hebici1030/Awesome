@@ -41,12 +41,12 @@ func Start(iConsumer int) []Superviser {
 	res := []Superviser{}
 	for i := range netFlows {
 		one_superviser := Superviser{}
-		netFlows[i].newNetMonitor()
+		netFlows[i].startMonitor()
 		provider := netFlows[i]
 		for i := 0; i < iConsumer; i++ {
 			consumer := &PacketConsumer{
 				status: true,
-				parent: provider,
+				net:    provider,
 				ch:     provider.ch_packets,
 			}
 			one_superviser.Provider = provider
@@ -63,7 +63,7 @@ func Start(iConsumer int) []Superviser {
 func (s *Superviser) AddConsumer() {
 	consumer := &PacketConsumer{
 		status: true,
-		parent: s.Provider,
+		net:    s.Provider,
 		ch:     s.Provider.ch_packets,
 	}
 	s.Consumers = append(s.Consumers, consumer)
@@ -78,11 +78,11 @@ func (s *Superviser) DecConsumer() {
 }
 
 func (s Superviser) PrintInfo() {
-	err := s.delOrTouchFile()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	//err := s.delOrTouchFile()
+	//if err != nil {
+	//	log.Fatal(err)
+	//	return
+	//}
 	timer := time.NewTimer(10 * time.Second)
 	defer timer.Stop()
 	for {

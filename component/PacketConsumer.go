@@ -13,13 +13,13 @@ type Comsumer interface {
 }
 type PacketConsumer struct {
 	status bool
-	parent *NetFlow
+	net    *NetFlow
 	ch     chan gopacket.Packet
 	////数据解析曾
 	//all_layer []gopacket.DecodingLayer
 }
 
-func (receiver *PacketConsumer) Consume() {
+func (consumer *PacketConsumer) Consume() {
 	var ip4 layers.IPv4
 	var ip6 layers.IPv6
 	var tcp layers.TCP
@@ -27,10 +27,10 @@ func (receiver *PacketConsumer) Consume() {
 	parser := gopacket.NewDecodingLayerParser(layers.LayerTypeEthernet, &ip4, &ip6, &tcp, &udp)
 	layerData := []gopacket.LayerType{}
 	for {
-		if !receiver.status {
+		if !consumer.status {
 			return
 		}
-		packet := <-receiver.ch
+		packet := <-consumer.ch
 		//TODO
 		//layer := packet.NetworkLayer()
 		//flow := layer.NetworkFlow()
@@ -47,10 +47,10 @@ func (receiver *PacketConsumer) Consume() {
 		var metaInfo model.FlowMetaInfo
 		if utils.InMap(slice2Map, layers.LayerTypeIPv4) {
 			flow := ip4.NetworkFlow()
-			metaInfo = receiver.parent.GetFlow(flow)
+			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
 		} else {
 			flow := ip6.NetworkFlow()
-			metaInfo = receiver.parent.GetFlow(flow)
+			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
 		}
 		meta = metaInfo.(*model.MetaFlow)
 		for _, ltype := range layerData {

@@ -41,7 +41,7 @@ func MonitorFactory(snapLen int32, sampleTime time.Duration) ([]*NetFlow, error)
 }
 
 // todo 一个网络层链接的通道缓存多少合适
-func (n *NetFlow) newNetMonitor() {
+func (n *NetFlow) startMonitor() {
 	//监听网口
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
 	defer handle.Close()
@@ -62,7 +62,7 @@ func (n *NetFlow) newNetMonitor() {
 
 var once sync.Once
 
-func (n *NetFlow) GetFlow(flow gopacket.Flow) model.FlowMetaInfo {
+func (n *NetFlow) GetMetaInfoByFlow(flow gopacket.Flow) model.FlowMetaInfo {
 	if n.Flows[flow] == nil {
 		once.Do(func() {
 			metaFlow := model.MetaFlow{
