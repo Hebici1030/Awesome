@@ -55,7 +55,9 @@ func (n *NetFlow) startMonitor() error {
 	packetSource := gopacket.NewPacketSource(handle, gopacket.DecodeFragment)
 	go func() {
 		for packet := range packetSource.Packets() {
+			print(packet)
 			n.ch_packets <- packet
+			print("enter a packet")
 			n.Summon++
 		}
 	}()
