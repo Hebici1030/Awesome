@@ -45,11 +45,12 @@ func MonitorFactory(snapLen int32, sampleTime time.Duration) ([]*NetFlow, error)
 func (n *NetFlow) startMonitor() error {
 	//监听网口
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
-	defer handle.Close()
+	//defer handle.Close()
 	if err != nil {
 		print(fmt.Sprintf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String()))
 	}
 	//DecodeFragment Fragment contains all
+	n.handler = handle
 	n.ch_packets = make(chan gopacket.Packet, 65535)
 	n.Flows = make(map[gopacket.Flow]model.FlowMetaInfo)
 	packetSource := gopacket.NewPacketSource(handle, gopacket.DecodeFragment)
