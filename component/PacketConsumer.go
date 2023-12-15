@@ -3,6 +3,7 @@ package component
 import (
 	"Awesome/component/model"
 	"Awesome/utils"
+	"fmt"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"log"
@@ -30,7 +31,7 @@ func (consumer *PacketConsumer) Consume() {
 		if !consumer.status {
 			return
 		}
-		print("waiting for packet")
+		fmt.Printf("%v,%v,%v,%v,%v \n", consumer.net, consumer.ch, cap(consumer.ch), len(consumer.ch), consumer.status)
 		packet := <-consumer.ch
 		print("got a Packet")
 		//TODO
