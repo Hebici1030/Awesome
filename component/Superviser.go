@@ -34,6 +34,7 @@ type result struct {
 
 // iConsumer 初始消费者数量
 func Start(iConsumer int) []Superviser {
+	print("start")
 	netFlows, err := MonitorFactory(65535, -1)
 	if err != nil {
 		return nil
