@@ -54,7 +54,6 @@ func (n *NetFlow) startMonitor() error {
 	n.Flows = make(map[gopacket.Flow]model.FlowMetaInfo)
 	packetSource := gopacket.NewPacketSource(handle, gopacket.DecodeFragment)
 	for packet := range packetSource.Packets() {
-		fmt.Printf("get a pcket:%v \n", packet)
 		n.ch_packets <- packet
 		n.Summon++
 	}
@@ -64,6 +63,7 @@ func (n *NetFlow) startMonitor() error {
 var once sync.Once
 
 func (n *NetFlow) GetMetaInfoByFlow(flow gopacket.Flow) model.FlowMetaInfo {
+	print(" get MetaInfo")
 	if n.Flows[flow] == nil {
 		once.Do(func() {
 			metaFlow := model.MetaFlow{
