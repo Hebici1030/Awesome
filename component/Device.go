@@ -47,6 +47,7 @@ func (n *NetFlow) startMonitor() error {
 	//defer handle.Close()
 	if err != nil {
 		print(err)
+		return nil
 	}
 	//DecodeFragment Fragment contains all
 	n.handler = handle
