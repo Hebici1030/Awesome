@@ -33,6 +33,7 @@ func (consumer *PacketConsumer) Consume() {
 		}
 		fmt.Printf("%v,%v,%v,%v,%v \n", consumer.net, consumer.ch, cap(consumer.ch), len(consumer.ch), consumer.status)
 		packet := <-consumer.ch
+		print("got a packet form", consumer.net.device.Name)
 		//TODO
 		//layer := packet.NetworkLayer()
 		//flow := layer.NetworkFlow()
