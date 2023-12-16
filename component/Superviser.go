@@ -91,7 +91,7 @@ func (s Superviser) PrintInfo() {
 		select {
 		case <-timer.C:
 			for _, v := range s.Provider.Flows {
-				print("start PrintInfo", len(s.Provider.Flows))
+				//print("start PrintInfo", len(s.Provider.Flows))
 				print(v.Detail())
 			}
 		}

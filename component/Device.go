@@ -2,7 +2,6 @@ package component
 
 import (
 	"Awesome/component/model"
-	"fmt"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/pcap"
 	"log"
@@ -47,7 +46,7 @@ func (n *NetFlow) startMonitor() error {
 	handle, err := pcap.OpenLive(n.device.Name, n.snapLen, false, n.sampleTime)
 	//defer handle.Close()
 	if err != nil {
-		print(fmt.Sprintf("Failed in Openlive(%v,%v,%v,%v)", n.device.Name, n.snapLen, false, n.sampleTime.String()))
+		print(err)
 	}
 	//DecodeFragment Fragment contains all
 	n.handler = handle

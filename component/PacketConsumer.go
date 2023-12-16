@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
-	"log"
 )
 
 type Comsumer interface {
-	Consume(chan gopacket.Packet)
+	Consume()
+	Exit()
 }
 type PacketConsumer struct {
 	status bool
@@ -33,7 +33,6 @@ func (consumer *PacketConsumer) Consume() {
 		}
 		fmt.Printf("%v,%v,%v,%v,%v \n", consumer.net, consumer.ch, cap(consumer.ch), len(consumer.ch), consumer.status)
 		packet := <-consumer.ch
-		print("got a Packet\n")
 		//TODO
 		//layer := packet.NetworkLayer()
 		//flow := layer.NetworkFlow()
@@ -42,14 +41,13 @@ func (consumer *PacketConsumer) Consume() {
 		//b_InData := (receiver.parent.device.Addresses == meta.Dst)
 		err := parser.DecodeLayers(packet.Data(), &layerData)
 		if err != nil {
-			print(" 解析协议层失败，继续解析下一个数据包\n")
+			print("解析协议层失败，继续解析下一个数据包\n")
 			continue
 		}
-		print("解析成功\n")
 		slice2Map := utils.ConvertSlice2Map(layerData)
 		var meta *model.MetaFlow
 		var metaInfo model.FlowMetaInfo
-		print("start get MetaInfo")
+
 		if utils.InMap(slice2Map, layers.LayerTypeIPv4) {
 			flow := ip4.NetworkFlow()
 			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
@@ -57,8 +55,6 @@ func (consumer *PacketConsumer) Consume() {
 			flow := ip6.NetworkFlow()
 			metaInfo = consumer.net.GetMetaInfoByFlow(flow)
 		}
-
-		log.Print("resolve a packet")
 		meta = metaInfo.(*model.MetaFlow)
 		for _, ltype := range layerData {
 			switch ltype {
